@@ -12,7 +12,7 @@ io.on('connection', socket => {
     console.log(`User ${user} conntected to the ChatHub`);
     io.emit('new user', { user });
 
-    socket.on('chat message', function (msg) {
+    socket.on('chat message', msg => {
         console.log(`new message: ${msg}`);
         io.emit('chat message', msg);
     });
