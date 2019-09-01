@@ -2,12 +2,11 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
+
     <meta charset="utf-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
@@ -81,8 +80,6 @@
     </div>
 
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
@@ -93,8 +90,6 @@
 
         $('.btn-intro').click(() => {
             const userInp = $('#user_name').val();
-
-            // no input?
             if (!userInp || userInp.trim() == '') {
                 showMessage(`Don't you have a name, bruh?`);
                 return;
