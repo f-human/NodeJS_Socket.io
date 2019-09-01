@@ -86,8 +86,22 @@
 
     <script>
 
+        /**
+            Spec:
+                - user sees input-box to type name
+                - user types in his/her name and clicks a button
+                - socket.io client is initialized afterward
+                - user sees chat-box where s/he can type message
+                - user sends 'send' button after typing message
+                - socket.io client emits the message
+                - and socket.io server broadcasts the message to connected users
+        */
+
+        // @user: is the current user (you)
+        // @socket: is the instance of Socket.io client
         let user, socket;
 
+        // the user is asked to type his/her name and press Go!
         $('.btn-intro').click(() => {
             const userInp = $('#user_name').val();
             if (!userInp || userInp.trim() == '') {
@@ -99,6 +113,7 @@
             displayCard();
         });
 
+        // user types in the message and clicks Send
         $('.btn-send').click(() => {
             const msg = $('#chat_msg').val();
             if (!msg || msg.trim() == '') {
@@ -112,10 +127,14 @@
                 time: new Date()
             };
 
+            // this is how we emit (send) message to socket.io server
             socket.emit('chat message', obj);
             $('#chat_msg').val('');
         });
 
+        // nothing important,
+        // just to get rid of repetitive code
+        // and for the sake of not making the code look ugly
         function showMessage(msg) {
             M.toast({
                 displayLength: 4500,
@@ -123,6 +142,8 @@
             });
         }
 
+        // hides user-name input
+        // and shows chat-box
         function displayCard() {
             const chatBox = $('.chat-box');
             const intro = $('.intro');
@@ -131,13 +152,21 @@
             initializeSocketConnection();
         }
 
+        // this is client-side socket.io initialization
+        // initialize only after we have a user name
+        // @url is the server url
+        // path: is the path that is defined in server-side
         function initializeSocketConnection() {
-            socket = io('http://localhost:3000', {
+            const url = 'http://localhost:3000';
+            socket = io(url, {
                 path: '/ChatHub',
-                query: { user }
+                query: { user } // socket.handshake.query on the server-side to get this value
             });
 
+            // whenever there is a new chat message
+            // whether it's sent by you or other people connected to the ChatHub
             socket.on('chat message', msg => {
+                // it's you when the msg.sender returns you :/ duh
                 const className = msg.sender == user ? 'm-self' : 'm-other';
                 const html = `<li class="${className}">
                         <h6>
@@ -151,6 +180,8 @@
                 $('.convo').append(html);
             });
 
+            // whenever a new user joins the ChatRoom
+            // simulation: open this index.html in a different tab/browser
             socket.on('new user', user => {
                 showMessage(`User ${user.user} joined the ChatRoom`);
             });
