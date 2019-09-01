@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <link rel="stylesheet"
+        href="style.css">
+
+
+    <title> NodeJS Socket.io Example </title>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="card chat-box"
+                    style="display: none;">
+                    <div class="card-content">
+                        <span class="card-title">Conversations</span>
+                        <ul class="convo"></ul>
+                    </div>
+                    <div class="card-action">
+                        <div class="row">
+                            <div class="input-field col s9">
+                                <i class="material-icons prefix">mode_edit</i>
+                                <textarea id="chat_msg"
+                                    class="materialize-textarea"></textarea>
+                                <label for="chat_msg">Write your message...</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <button class="btn waves-effect waves-light btn-send btn-block"
+                                    name="action">Send
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card overlay intro">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s12">
+                                <h1 class="purple-text text-darken-3 center-align">Hi there</h1>
+                                <h3>What do I call you?</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s9">
+                                <i class="material-icons prefix">mode_edit</i>
+                                <input placeholder="Placeholder"
+                                    id="user_name"
+                                    type="text"
+                                    class="validate">
+                                <label for="user_name">Call me...</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <button class="btn waves-effect waves-light btn-intro btn-block"
+                                    name="action">Go
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+
+    <script>
+
+        let user, socket;
+
+        $('.btn-intro').click(() => {
+            const userInp = $('#user_name').val();
+
+            // no input?
+            if (!userInp || userInp.trim() == '') {
+                showMessage(`Don't you have a name, bruh?`);
+                return;
+            }
+
+            user = userInp;
+            displayCard();
+        });
+
+        $('.btn-send').click(() => {
+            const msg = $('#chat_msg').val();
+            if (!msg || msg.trim() == '') {
+                showMessage(`Nah, you must type something and then retry sending...`);
+                return;
+            }
+
+            const obj = {
+                sender: user,
+                text: msg,
+                time: new Date()
+            };
+
+            socket.emit('chat message', obj);
+            $('#chat_msg').val('');
+        });
+
+        function showMessage(msg) {
+            M.toast({
+                displayLength: 4500,
+                html: msg
+            });
+        }
+
+        function displayCard() {
+            const chatBox = $('.chat-box');
+            const intro = $('.intro');
+            chatBox.show();
+            intro.hide();
+            initializeSocketConnection();
+        }
+
+        function initializeSocketConnection() {
+            socket = io('http://localhost:3000', {
+                path: '/ChatHub',
+                query: { user }
+            });
+
+            socket.on('chat message', msg => {
+                const className = msg.sender == user ? 'm-self' : 'm-other';
+                const html = `<li class="${className}">
+                        <h6>
+                            ${msg.sender} - 
+                            <span>
+                                ${new Date(msg.time).toLocaleString()}
+                            <span>
+                        </h6>
+                        <h5>${msg.text}</h5>
+                    </li>`;
+                $('.convo').append(html);
+            });
+
+            socket.on('new user', user => {
+                showMessage(`User ${user.user} joined the ChatRoom`);
+            });
+        }
+
+
+    </script>
+
+</body>
+
+</html>

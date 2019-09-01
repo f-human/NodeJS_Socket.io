@@ -1,0 +1,55 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+    font-weight: 300;
+}
+
+.toast {
+    background-color: #f06292 !important;
+    font-weight: 400;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.convo li {
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+}
+
+.convo li.m-self {
+    background: #f7f7f7;
+    margin-left: 115px;
+}
+
+.convo li.m-other {
+    background: #5e35b1;
+    color: #fff;
+    margin-right: 115px;
+}
+
+.convo li h5,
+.convo li h6 {
+    margin: 0;
+}
+
+.convo li h5 {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+.convo li h6 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.convo li h6 span {
+    font-size: 12px;
+    font-weight: 400;
+}
+
