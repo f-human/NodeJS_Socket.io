@@ -92,13 +92,13 @@
                 - user types in his/her name and clicks a button
                 - socket.io client is initialized afterward
                 - user sees chat-box where s/he can type message
-                - user sends 'send' button after typing message
+                - user clicks 'send' button after typing message
                 - socket.io client emits the message
                 - and socket.io server broadcasts the message to connected users
         */
 
-        // @user: is the current user (you)
-        // @socket: is the instance of Socket.io client
+        // @user is the user browsing index.html (you)
+        // @socket is the instance of Socket.io client
         let user, socket;
 
         // the user is asked to type his/her name and press Go!
@@ -145,17 +145,15 @@
         // hides user-name input
         // and shows chat-box
         function displayCard() {
-            const chatBox = $('.chat-box');
-            const intro = $('.intro');
-            chatBox.show();
-            intro.hide();
+            $('.chat-box').show();
+            $('.intro').hide();
             initializeSocketConnection();
         }
 
         // this is client-side socket.io initialization
         // initialize only after we have a user name
         // @url is the server url
-        // path: is the path that is defined in server-side
+        // @path is the path that is defined in server-side
         function initializeSocketConnection() {
             const url = 'http://localhost:3000';
             socket = io(url, {
